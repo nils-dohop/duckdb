@@ -2,6 +2,9 @@
 # description: Test reading csv files containing time format errors
 # group: [csv]
 
+statement ok
+PRAGMA enable_verification
+
 statement error
 Select * from read_csv('data/csv/time_format_errors_out_of_bounds.csv', header=true, timeformat='%H%M', types = ['BIGINT', 'TIME'] );
 ----
@@ -23,3 +26,8 @@ Could not parse string "23:67" according to format specifier "%H:%M"
 23:67
    ^
 Error: Minutes out of range, expected a value between 0 and 59
+
+query TT
+Select * from read_csv('data/csv/time_format_errors_out_of_bounds.csv', header=true, timeformat='%H:%M', types = ['BIGINT', 'TIME'], ignore_errors=true);
+----
+123	12:33:00

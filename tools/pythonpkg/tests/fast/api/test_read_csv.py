@@ -160,6 +160,15 @@ class TestReadCSV(object):
             datetime.datetime(2000, 1, 1, 12, 12),
         )
 
+    def test_time_format(self, duckdb_cursor):
+        rel = duckdb_cursor.read_csv(TestFile('time.csv'), time_format='%H%M', dtype={'time': 'time'})
+        res = rel.fetchall()
+        assert res == [
+            (datetime.time(12, 12),),
+            (datetime.time(14, 15),),
+            (datetime.time(15, 16),),
+            ]
+
     def test_timestamp_format(self, duckdb_cursor):
         rel = duckdb_cursor.read_csv(TestFile('datetime.csv'), timestamp_format='%Y-%m-%d %H:%M:%S')
         res = rel.fetchone()
